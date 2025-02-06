@@ -2,25 +2,26 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="D:/HACI/MMchallenge/NEUQdata" # 数据集根目录
+DATA_ROOTPATH="D:/HACI/MMchallenge/NEUQdata"
+TRAIN_MODEL="D:/HACI/MMchallenge/MEIJU2025-baseline-master/MPDD_Code/checkpoints/1s_2labels_wav2vec+openface/best_model_2025-02-05-20.09.47.pth"
 AUDIOFEATURE_METHOD="wav2vec" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
 VIDEOLFEATURE_METHOD="openface" # 视频特征类别，可选{openface, resnet, densenet}
 SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
 LABELCOUNT=2 # 标签分类数，可选{2, 3, 5}
+TRACK_OPTION="Track2"
 FEATURE_MAX_LEN=25 # 设定最大特征长度，不足补零、超出截断
 BATCH_SIZE=16
-LR=0.00006
-NUM_EPOCHS=500
 DEVICE="cpu"
-
 
 for arg in "$@"; do
   case $arg in
-    --data_rootpath=*) data_rootpath="${arg#*=}" ;;
+    --data_rootpath=*) DATA_ROOTPATH="${arg#*=}" ;;
+    --train_model=*) TRAIN_MODEL="${arg#*=}" ;;
     --audiofeature_method=*) AUDIOFEATURE_METHOD="${arg#*=}" ;;
     --videofeature_method=*) VIDEOLFEATURE_METHOD="${arg#*=}" ;;
     --splitwindow_time=*) SPLITWINDOW="${arg#*=}" ;;
     --labelcount=*) LABELCOUNT="${arg#*=}" ;;
+    --track_option=*) TRACK_OPTION="${arg#*=}" ;;
     --feature_max_len=*) FEATURE_MAX_LEN="${arg#*=}" ;;
     --batch_size=*) BATCH_SIZE="${arg#*=}" ;;
     --lr=*) LR="${arg#*=}" ;;
@@ -31,16 +32,16 @@ for arg in "$@"; do
 done
 
 for i in `seq 1 1 1`; do
-    cmd="python train.py \
-        --data_rootpath=$data_rootpath \
+    cmd="python test.py \
+        --data_rootpath=$DATA_ROOTPATH \
+        --train_model=$TRAIN_MODEL \
         --audiofeature_method=$AUDIOFEATURE_METHOD \
         --videofeature_method=$VIDEOLFEATURE_METHOD \
         --splitwindow_time=$SPLITWINDOW \
         --labelcount=$LABELCOUNT \
+        --track_option=$TRACK_OPTION \
         --feature_max_len=$FEATURE_MAX_LEN \
         --batch_size=$BATCH_SIZE \
-        --lr=$LR \
-        --num_epochs=$NUM_EPOCHS \
         --device=$DEVICE"
 
     echo "\n-------------------------------------------------------------------------------------"

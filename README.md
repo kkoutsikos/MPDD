@@ -3,16 +3,8 @@ The baseline system provided for the MM 2025 MPDD Challenge serves as a starting
 # Results
 
 The metrics reported are accuracy (Acc.) and F1-score, both with and without personalized features (PF) for the MPDD-Young and MPDD-Elderly datasets. Each value represents the best-performing feature combination for each experiment, using default hyper-parameters.
-#### MPDD-Young
 
-| Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
-|--------|-----------|---------------|----------------|------------------|-----------------|
-| 1s     | Binary    | wav2vec       | openface       | 56.06 / 55.23    | 63.64 / 59.96   |
-| 1s     | Ternary   | mfcc          | densenet       | 48.48 / 43.72    | 51.52 / 51.62   |
-| 5s     | Binary    | opensmile     | resnet         | 60.61 / 60.02    | 62.12 / 62.11   |
-| 5s     | Ternary   | mfcc          | densenet       | 42.42 / 39.38    | 50.00 / 41.31   |
-
-#### MPDD-Elderly
+#### MPDD-Elderly(Track1)
 
 | Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
 |--------|-----------|---------------|----------------|-------------------|----------------|
@@ -21,8 +13,16 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
 | 1s     | Quinary   | opensmile     | resnet         | 70.79 / 42.97    | 75.28 / 54.97 |
 | 5s     | Binary    | opensmile     | resnet         | 80.49 / 60.95    | 82.93 / 71.44 |
 | 5s     | Ternary   | wav2vec       | openface       | 45.45 / 35.79    | 61.36 / 54.63 |
-| 5s     | Quinary   | mfcc          | densenet       | 71.76 / 22.69    | 81.18 / 61.43 |
+| 5s     | Quinary   | mfcc          | densenet       | 71.76 / 22.69    | 81.18 / 61.42 |
 
+#### MPDD-Young(Track2)
+
+| Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
+|--------|-----------|---------------|----------------|------------------|-----------------|
+| 1s     | Binary    | wav2vec       | openface       | 56.06 / 55.23    | 63.64 / 59.96   |
+| 1s     | Ternary   | mfcc          | densenet       | 48.48 / 43.72    | 51.52 / 51.62   |
+| 5s     | Binary    | opensmile     | resnet         | 60.61 / 60.02    | 62.12 / 62.11   |
+| 5s     | Ternary   | mfcc          | densenet       | 42.42 / 39.38    | 50.00 / 41.31   |
 
 # Environment
 
@@ -79,14 +79,21 @@ For personalized features,
 ## Training
 To train the model with default parameters, taking MPDD-Young for example, simply run:  
 ```bash
-bash scripts/Track_MPDD-Young/train_1s_binary.sh
+bash scripts/Track2/train_1s_binary.sh
 ```
 
 You can also modify parameters such as feature types, split window time, classification dimensions, or learning rate directly through the command line:  
 ```bash
-bash scripts/Track_MPDD-Young/train_1s_binary.sh --audiofeature_method=wav2vec --videofeature_method=resnet --splitwindow_time=5s --labelcount=5 --batch_size=32 --lr=0.001 --num_epochs=500
+bash scripts/Track2/train_1s_binary.sh --audiofeature_method=wav2vec --videofeature_method=resnet --splitwindow_time=5s --labelcount=5 --batch_size=32 --lr=0.001 --num_epochs=500
 ```
-Refer to `config.py` for more parameters.
+Refer to `config.json` for more parameters.
+
+## Testing
+To test the model with default parameters, first modify the default parameters in `test.sh` to match the current task, and run:  
+```bash
+bash scripts/test.sh
+```
+After testing 6 tasks in Track1 or 4 tasks in Track2, the results will be saved to the 'test_result' folder, which you eventually need to zip and submit.
 
 # Acknowledgements
 MPDD is developed based on the work of MEIJU 2025. The Github URL of MEIJU 2025 is: https://github.com/AI-S2-Lab/MEIJU2025-baseline.

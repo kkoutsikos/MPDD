@@ -20,6 +20,12 @@ def load_config(config_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Test MDPP Model")
+    parser.add_argument('--labelcount', type=int, default=2,
+                        help="Number of data categories (2, 3, or 5).")
+    parser.add_argument('--track_option', type=str, required=True,
+                        help="Track1 or Track2")
+    parser.add_argument('--feature_max_len', type=int, required=True,
+                        help="Max length of feature.")
     parser.add_argument('--data_rootpath', type=str, required=True,
                         help="Root path to the program dataset")
     parser.add_argument('--train_model', type=str, required=True,
@@ -42,10 +48,10 @@ if __name__ == '__main__':
     parser.add_argument('--splitwindow_time', type=str, default='1s',
                         help="Time window for splitted features. e.g. '1s' or '5s'")
 
-    parser.add_argument('--labelcount', type=int, default=2,
-                        help="Number of data categories (2, 3, or 5).")
     parser.add_argument('--batch_size', type=int, default=24,
                         help="Batch size for testing")
+    parser.add_argument('--lr', type=float, default=1e-4,
+                        help="Learning rate")
     parser.add_argument('--device', type=str, default='cpu',
                         help="Device to test the model on, e.g. 'cuda' or 'cpu'")
 
@@ -56,18 +62,13 @@ if __name__ == '__main__':
     args.personalized_features_file = os.path.join(args.data_rootpath, args.personalized_features_file)
     feature_rootpath = os.path.join(args.data_rootpath, args.feature_rootpath)
 
-    # ===========设定模型的工作参数opt========
-    #
     config = load_config('config.json')
     opt = Opt(config)
-    if args.splitwindow_time == '1s':
-        opt.feature_max_len = 25
-    elif args.splitwindow_time == '5s':
-        opt.feature_max_len = 5
-    else:
-        opt.feature_max_len = 25  # 默认值
 
+    # 根据任务类别修改opt中个别动态参数
     opt.emo_output_dim = args.labelcount
+    opt.feature_max_len = args.feature_max_len
+    opt.lr = args.lr
 
     # 按照传入的音视频特征种类，拼接出特征文件夹路径
     audio_path = os.path.join(feature_rootpath, f"{args.audiofeature_method}_{args.splitwindow_time}") + '/'
@@ -85,11 +86,9 @@ if __name__ == '__main__':
         os.mkdir(logger_path)
     logger = get_logger(logger_path, 'result')
 
-    # ================工作参数opt设置完毕，创建模型==================
-    #
-
     cur_time = time.strftime('%Y-%m-%d-%H.%M.%S', time.localtime(time.time()))
     best_model_name = f"best_model_{cur_time}.pth"
+
     logger.info(f"splitwindow_time={args.splitwindow_time}, audiofeature_method={args.audiofeature_method}, "
                 f"videofeature_method={args.videofeature_method}")
     logger.info(f"batch_size={args.batch_size}, , "
@@ -113,14 +112,24 @@ if __name__ == '__main__':
     filenames = [item["audio_feature_path"] for item in test_data if "audio_feature_path" in item]
     IDs = [path[:path.find('.')] for path in filenames]
 
+    if args.labelcount==2:
+        label="binary"
+    elif args.labelcount==3:
+        label="tri"
+    elif args.labelcount==5:
+        label="pen"
     # 将结果输出到CSV中
-    csv_file = f'{opt.log_dir}/test_result_{args.labelcount}lables.csv'
+    result_dir = f"./test_result/answer_{args.track_option}/{args.splitwindow_time}/{label}"
+    if not os.path.exists(result_dir):
+        os.makedirs(result_dir)
+
+    csv_file = f'{result_dir}/test.csv'
     with open(csv_file, mode='w') as file:
-        file.write("ID,label,pred" + '\n')
-        for col1, col2, col3 in zip(IDs, label, pred):
-            file.write(f"{col1},{col2},{col3}\n")
+        file.write("ID,pred" + '\n')
+        for col1, col2 in zip(IDs, pred):
+            file.write(f"{col1},{col2}\n")
 
     logger.info(f"Testing complete.\nThe result is wrote into file:{csv_file}.")
-    logger.info(f"Weighted F1: {f1_weighted:.4f}, Unweighted F1: {f1_unweighted:.4f}, "
-                f"Weighted Acc: {acc_weighted:.4f}, Unweighted Acc: {acc_unweighted:.4f}.")
+    logger.info(f"Unweighted F1: {f1_unweighted:.4f}, "
+                f"Unweighted Acc: {acc_unweighted:.4f}.")
     logger.info('Confusion Matrix:\n{}'.format(cm))

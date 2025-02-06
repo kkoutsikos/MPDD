@@ -82,7 +82,7 @@ class AudioVisualDataset(Dataset):
         elif self.label_count == 3:
             label = torch.tensor(entry['tri_category'], dtype=torch.long)
         elif self.label_count == 5:
-            label = torch.tensor(entry['qui_category'], dtype=torch.long)
+            label = torch.tensor(entry['pen_category'], dtype=torch.long)
 
         import os
 
