@@ -1,0 +1,27 @@
+{
+    "1": {
+        "id": "1",
+        "age": "17",
+        "gender": "Female",
+        "native_place": "Hunan",
+        "bin_depression": 0,
+        "tri_depression": 0,
+        "qui_depression": 1,
+        "HAMD_24": 4.0,
+        "PHQ_9": 2.0,
+        "big5_traits": {
+            "Extraversion": 0,
+            "Agreeableness": 0,
+            "Conscientiousness": 0,
+            "Neuroticism": 1,
+            "Openness": 0
+        },
+        "big5_scores": {
+            "Extraversion": 4,
+            "Agreeableness": 5,
+            "Conscientiousness": 5,
+            "Neuroticism": 8,
+            "Openness": 6
+        }
+    }
+}
