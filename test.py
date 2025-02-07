@@ -6,6 +6,7 @@ from train import eval
 import argparse
 from utils.logger import get_logger
 import numpy as np
+import pandas as pd
 import time
 from torch.utils.data import DataLoader
 from dataset import *
@@ -105,9 +106,8 @@ if __name__ == '__main__':
                            audio_path=audio_path, video_path=video_path), batch_size=args.batch_size, shuffle=False)
     logger.info('The number of testing samples = %d' % len(test_loader.dataset))
 
-    # 评估指标
-    label, pred, acc_weighted, acc_unweighted, f1_weighted, f1_unweighted, cm = eval(model, test_loader,
-                                                                                            args.device)
+    # 执行测试
+    _, pred, *_ = eval(model, test_loader, args.device)
 
     filenames = [item["audio_feature_path"] for item in test_data if "audio_feature_path" in item]
     IDs = [path[:path.find('.')] for path in filenames]
@@ -118,18 +118,39 @@ if __name__ == '__main__':
         label="tri"
     elif args.labelcount==5:
         label="pen"
+
     # 将结果输出到CSV中
-    result_dir = f"./test_result/answer_{args.track_option}/{args.splitwindow_time}/{label}"
+    pred_col_name = f"pred_{args.splitwindow_time}_{args.labelcount}"
+
+    result_dir = f"./answer_{args.track_option}"
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
 
-    csv_file = f'{result_dir}/test.csv'
-    with open(csv_file, mode='w') as file:
-        file.write("ID,pred" + '\n')
-        for col1, col2 in zip(IDs, pred):
-            file.write(f"{col1},{col2}\n")
+    csv_file = f"{result_dir}/test.csv"
 
-    logger.info(f"Testing complete.\nThe result is wrote into file:{csv_file}.")
-    logger.info(f"Unweighted F1: {f1_unweighted:.4f}, "
-                f"Unweighted Acc: {acc_unweighted:.4f}.")
-    logger.info('Confusion Matrix:\n{}'.format(cm))
+    # 获取测试数据中的 ID 顺序，确保一致
+    test_ids = [item["audio_feature_path"].replace(".npy", "") for item in test_data]
+
+    if os.path.exists(csv_file):
+        df = pd.read_csv(csv_file)
+    else:
+        df = pd.DataFrame(columns=["ID"])
+
+    if "ID" in df.columns:
+        df = df.set_index("ID")  
+    else:
+        df = pd.DataFrame(index=test_ids)
+
+    df.index.name = "ID"
+
+    pred = np.array(pred) 
+    if len(pred) != len(test_ids):
+        logger.error(f"Prediction length {len(pred)} does not match test ID length {len(test_ids)}")
+        raise ValueError("Mismatch between predictions and test IDs")
+
+    new_df = pd.DataFrame({pred_col_name: pred}, index=test_ids)
+    df[pred_col_name] = new_df[pred_col_name]
+    df = df.reindex(test_ids)
+    df.to_csv(csv_file)
+
+    logger.info(f"Testing complete. Results saved to: {csv_file}.")

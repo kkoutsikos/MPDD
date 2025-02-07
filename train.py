@@ -6,7 +6,7 @@ import argparse
 import torch
 from sklearn.metrics import f1_score, confusion_matrix, accuracy_score
 from torch.utils.data import DataLoader
-from train_val_split import train_val_split
+from train_val_split import train_val_split1, train_val_split2
 from models.our.our_model import ourModel
 from dataset import *
 from utils.logger import get_logger
@@ -62,7 +62,11 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
 
     # 划分训练集和验证集
     # data = json.load(open(train_json, 'r'))
-    train_data, val_data, train_category_count, val_category_count = train_val_split(train_json, val_percentage=0.1,
+    if args.track_option=='Track1':
+        train_data, val_data, train_category_count, val_category_count = train_val_split1(train_json, val_percentage=0.1,
+                                                                                     seed=seed)
+    elif args.track_option=='Track2':
+        train_data, val_data, train_category_count, val_category_count = train_val_split2(train_json, val_percentage=0.1,
                                                                                      seed=seed)
 
     train_loader = DataLoader(
@@ -147,6 +151,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Train MDPP Model")
     parser.add_argument('--labelcount', type=int, default=3,
                         help="Number of data categories (2, 3, or 5).")
+    parser.add_argument('--track_option', type=str, required=True,
+                        help="Track1 or Track2")
     parser.add_argument('--feature_max_len', type=int, required=True,
                         help="Max length of feature.")
     parser.add_argument('--data_rootpath', type=str, required=True,

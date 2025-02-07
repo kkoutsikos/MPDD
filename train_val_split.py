@@ -6,8 +6,10 @@ import numpy as np
 import torch
 
 
-def train_val_split(file_path, val_percentage=0.10, seed=None):
+def train_val_split2(file_path, val_percentage=0.10, seed=None):
     """
+    Track2数据集划分
+
     从给定的JSON文件中按人员编号分组，选取10%的人员编号数据，同时需确保每个标签的比例和原始数据一致，
     选取的人员编号数据要么全部选中，要么全不选。
 
@@ -78,5 +80,94 @@ def train_val_split(file_path, val_percentage=0.10, seed=None):
         val_category_count[entry['tri_category']] += 1
     # 保存 train_data 和 val_data 到 JSON 文件（如果需要）
 
+
+    return train_data, val_data, train_category_count, val_category_count
+
+import json
+import random
+from collections import defaultdict
+
+def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
+    """
+    Track1数据集划分
+
+    读取 JSON 文件，并按照指定规则划分训练集和验证集：
+      - label=4 的数据按 2:1 划分；
+      - label=3 且 id=69 的数据直接放入验证集；
+      - 其余数据按照 val_ratio 进行划分。
+    
+    保证：
+      - 同一个 ID 的样本不会同时出现在训练集和验证集中。
+      - 返回格式与 train_val_split 保持一致。
+
+    参数:
+        file_path (str): JSON 数据文件路径
+        val_ratio (float): 验证集占比，默认 0.1
+        random_seed (int): 随机种子，默认 3407
+
+    返回:
+        tuple: (训练数据列表, 验证数据列表, 训练集类别统计, 验证集类别统计)
+    """
+    random.seed(random_seed)
+
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+
+    train_data, val_data = [], []
+    label_to_ids = defaultdict(set)
+    id_to_samples = defaultdict(list)
+
+    for item in data:
+        label = item["label"]
+        id_ = item["id"]
+        label_to_ids[label].add(id_)
+        id_to_samples[id_].append(item)
+
+    train_ids, val_ids = set(), set()
+
+    for label, ids in label_to_ids.items():
+        ids = list(ids)
+
+        # 处理 label=4（2:1 划分）
+        if label == 4:
+            for id_ in ids:
+                samples = id_to_samples[id_]
+                if len(samples) >= 3:
+                    random.shuffle(samples)
+                    train_data.extend(samples[:2])
+                    val_data.extend(samples[2:3])
+                else:
+                    train_data.extend(samples)
+            continue
+
+        # 处理 label=3，且 id=69 的情况
+        if label == 3:
+            for id_ in ids:
+                if id_ == "69":  # ID 87 直接入验证集
+                    val_data.extend(id_to_samples[id_])
+                else:
+                    train_data.extend(id_to_samples[id_])
+            continue
+
+        # 其他类别按比例随机划分
+        random.shuffle(ids)
+        split_index = int(len(ids) * (1 - val_ratio))
+        train_ids.update(ids[:split_index])
+        val_ids.update(ids[split_index:])
+
+    # 根据 ID 划分数据
+    for id_ in train_ids:
+        train_data.extend(id_to_samples[id_])
+    for id_ in val_ids:
+        val_data.extend(id_to_samples[id_])
+
+    # 计算类别统计信息
+    train_category_count = defaultdict(int)
+    val_category_count = defaultdict(int)
+
+    for entry in train_data:
+        train_category_count[entry['label']] += 1
+    for entry in val_data:
+        val_category_count[entry['label']] += 1
 
     return train_data, val_data, train_category_count, val_category_count

@@ -69,12 +69,35 @@ For personalized features,
    ```bash
    pip install -i https://pypi.tuna.tsinghua.edu.cn/simple transformers==4.40.0
    ```
+
 - **gen_description.py**: This script loads the GLM3 model, reads the input data, and generates personalized descriptions.  
   - Modify the `generate_patient_prompt()` function to specify the required indicators for your dataset.  
   - Ensure the label file format matches the provided `label_data.json`.  
 
 - **extrapersonality.py**: This script embeds the personalized descriptions using the `roberta-large` model to generate feature embeddings.
 
+The obtained features and lables should be organized as follows, where `data_rootpath` is put into the script during training and testing.
+
+`data_rootpath`:
+
+    ├── Annotation/
+    │   ├── Training_Validation_files.json
+    │   ├── Testing_files.json
+    ├── feature_personalized/
+    │   ├── descriptions_embeddings_with_ids.npy
+    ├── features/
+    │   ├── densenet_1s/
+    │   ├── densenet_5s/
+    │   ├── mfccs_1s/
+    │   ├── mfccs_5s/
+    │   ├── openface_1s/
+    │   ├── openface_5s/
+    │   ├── opensmile_1s/
+    │   ├── opensmile_5s/
+    │   ├── ResNet_1s/
+    │   ├── ResNet_5s/
+    │   ├── wav2vec_1s/
+    │   ├── wav2vec_5s/
 
 ## Training
 To train the model with default parameters, taking MPDD-Young for example, simply run:  
@@ -89,11 +112,12 @@ bash scripts/Track2/train_1s_binary.sh --audiofeature_method=wav2vec --videofeat
 Refer to `config.json` for more parameters.
 
 ## Testing
-To test the model with default parameters, first modify the default parameters in `test.sh` to match the current task, and run:  
+To predict the lables for testing set with your obtained model, first modify the default parameters in `test.sh` to match the current task, and run:  
 ```bash
 bash scripts/test.sh
 ```
-After testing 6 tasks in Track1 or 4 tasks in Track2, the results will be saved to the 'test_result' folder, which you eventually need to zip and submit.
+After testing 6 tasks in Track1 or 4 tasks in Track2, the results will be merged into the `test.csv` file in `./answer_Track2/`.
+Notice that the given lables in `Testing_Files.json` are not yet true lables, the actual test lables will be used for model evaluation at the later stage of the challenge.
 
 # Acknowledgements
 MPDD is developed based on the work of MEIJU 2025. The Github URL of MEIJU 2025 is: https://github.com/AI-S2-Lab/MEIJU2025-baseline.

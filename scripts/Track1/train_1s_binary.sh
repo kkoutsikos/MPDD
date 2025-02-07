@@ -7,6 +7,7 @@ AUDIOFEATURE_METHOD="mfccs" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
 VIDEOLFEATURE_METHOD="openface" # 视频特征类别，可选{openface, resnet, densenet}
 SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
 LABELCOUNT=2 # 标签分类数，可选{2, 3, 5}
+TRACK_OPTION="Track1"
 FEATURE_MAX_LEN=26 # 设定最大特征长度，不足补零、超出截断
 BATCH_SIZE=1
 LR=0.00002
@@ -21,6 +22,7 @@ for arg in "$@"; do
     --videofeature_method=*) VIDEOLFEATURE_METHOD="${arg#*=}" ;;
     --splitwindow_time=*) SPLITWINDOW="${arg#*=}" ;;
     --labelcount=*) LABELCOUNT="${arg#*=}" ;;
+    --track_option=*) TRACK_OPTION="${arg#*=}" ;;
     --feature_max_len=*) FEATURE_MAX_LEN="${arg#*=}" ;;
     --batch_size=*) BATCH_SIZE="${arg#*=}" ;;
     --lr=*) LR="${arg#*=}" ;;
@@ -37,6 +39,7 @@ for i in `seq 1 1 1`; do
         --videofeature_method=$VIDEOLFEATURE_METHOD \
         --splitwindow_time=$SPLITWINDOW \
         --labelcount=$LABELCOUNT \
+        --track_option=$TRACK_OPTION \
         --feature_max_len=$FEATURE_MAX_LEN \
         --batch_size=$BATCH_SIZE \
         --lr=$LR \
