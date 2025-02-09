@@ -7,13 +7,14 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
 #### MPDD-Elderly(Track1)
 
 | Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
-|--------|-----------|---------------|----------------|-------------------|----------------|
-| 1s     | Binary    | mfcc          | openface       | 78.82 / 63.57    | 82.35 / 66.98  |
-| 1s     | Ternary   | opensmile     | resnet         | 58.14 / 58.57    | 63.95 / 60.30  |
-| 1s     | Quinary   | opensmile     | resnet         | 70.79 / 42.97    | 75.28 / 54.97 |
-| 5s     | Binary    | opensmile     | resnet         | 80.49 / 60.95    | 82.93 / 71.44 |
-| 5s     | Ternary   | wav2vec       | openface       | 45.45 / 35.79    | 61.36 / 54.63 |
-| 5s     | Quinary   | mfcc          | densenet       | 71.76 / 22.69    | 81.18 / 61.42 |
+|--------|-----------|---------------|----------------|-------------------|-----------------|
+| 1s     | Binary    | mfcc          | openface       | 83.33 / 70.89     | 84.62 / 79.13   |
+| 1s     | Ternary   | opensmile     | resnet         | 55.13 / 49.14     | 56.41 / 55.64   |
+| 1s     | Quinary   | opensmile     | densenet       | 66.67 / 44.00     | 69.23 / 46.66   |
+| 5s     | Binary    | opensmile     | resnet         | 76.92 / 66.15     | 80.77 / 72.37   |
+| 5s     | Ternary   | wav2vec       | openface       | 50.00 / 47.59     | 57.69 / 59.37   |
+| 5s     | Quinary   | mfcc          | densenet       | 75.64 / 56.83     | 78.21 / 58.40   |
+
 
 #### MPDD-Young(Track2)
 
