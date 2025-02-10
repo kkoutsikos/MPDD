@@ -30,7 +30,7 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
     pytorch >= 1.0.0
     scikit-learn = 1.5.1
 
-# Feature Extraction
+# Features
 
 In our baseline, we use the following features:
 
@@ -55,26 +55,8 @@ We generate personalized features by loading the GLM3 model, creating personaliz
 The link of the `roberta-large` model is: [RoBERTa Large](https://huggingface.co/roberta-large)
 
 # Usage
-## Feature Extraction
-
-First, you should update the data paths in the feature extraction files within the corresponding feature extraction folder. Then download the appropriate model files for wav2vec and OpenFace. Manually enter the following command to configure the environment:
-   ```bash
-  pip install scikit-image fire opencv-python tqdm matplotlib pandas soundfile wenetruntime fairseq==0.9.0 numpy==1.26.4 transformers paddlespeech pytest-runner paddlepaddle whisper -i https://pypi.tuna.tsinghua.edu.cn/simple
-   ```
-For personalized features,
- install PyTorch (CUDA version) and Transformers:  
-   ```bash
-   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-   ```
-   ```bash
-   pip install -i https://pypi.tuna.tsinghua.edu.cn/simple transformers==4.40.0
-   ```
-
-- **gen_description.py**: This script loads the GLM3 model, reads the input data, and generates personalized descriptions.  
-  - Modify the `generate_patient_prompt()` function to specify the required indicators for your dataset.  
-  - Ensure the label file format matches the provided `label_data.json`.  
-
-- **extrapersonality.py**: This script embeds the personalized descriptions using the `roberta-large` model to generate feature embeddings.
+## Dataset Download
+coming soon...
 
 The obtained features and lables should be organized as follows, where `data_rootpath` is put into the script during training and testing.
 
