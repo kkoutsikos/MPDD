@@ -1,10 +1,10 @@
 # MM 2025 MPDD Baseline Code
 The baseline system provided for the MM 2025 MPDD Challenge serves as a starting point for participants to develop their solutions for the Multimodal Personalized Depression Detection tasks. The baseline system is designed to be straightforward yet effective, providing participants with a solid foundation upon which they can build and improve.
-# Results
 
+# Results
 The metrics reported are accuracy (Acc.) and F1-score, both with and without personalized features (PF) for the MPDD-Young and MPDD-Elderly datasets. Each value represents the best-performing feature combination for each experiment, using default hyper-parameters.
 
-#### MPDD-Elderly(Track1)
+#### MPDD-Elderly (Track1)
 
 | Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
 |--------|-----------|---------------|----------------|-------------------|-----------------|
@@ -16,7 +16,7 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
 | 5s     | Quinary   | mfcc          | densenet       | 75.64 / 56.83     | 78.21 / 58.40   |
 
 
-#### MPDD-Young(Track2)
+#### MPDD-Young (Track2)
 
 | Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
 |--------|-----------|---------------|----------------|------------------|-----------------|
@@ -59,28 +59,21 @@ The link of the `roberta-large` model is: [RoBERTa Large](https://huggingface.co
 ## Dataset Download
 coming soon...
 
-The obtained features and labels should be organized as follows, where `data_rootpath` is put into the script during training and testing.
+After obtaining the dataset, users should modify `data_rootpath` in the scripts during training and testing. Notice that testing data will be made public in the later stage of the competition.
 
 `data_rootpath`:
+    ├── Training/
+    │   ├──1s
+    │   ├──5s
+    │   ├──individualEmbedding
+    │   ├──labels
+    ├── Testing/
+    │   ├──1s
+    │   ├──5s
+    │   ├──individualEmbedding
+    │   ├──labels
 
-    ├── Annotation/
-    │   ├── Training_Validation_files.json
-    │   ├── Testing_files.json
-    ├── feature_personalized/
-    │   ├── descriptions_embeddings_with_ids.npy
-    ├── features/
-    │   ├── densenet_1s/
-    │   ├── densenet_5s/
-    │   ├── mfccs_1s/
-    │   ├── mfccs_5s/
-    │   ├── openface_1s/
-    │   ├── openface_5s/
-    │   ├── opensmile_1s/
-    │   ├── opensmile_5s/
-    │   ├── ResNet_1s/
-    │   ├── ResNet_5s/
-    │   ├── wav2vec_1s/
-    │   ├── wav2vec_5s/
+The testing data would be 
 
 ## Training
 To train the model with default parameters, taking MPDD-Young for example, simply run:  
@@ -100,7 +93,6 @@ To predict the labels for the testing set with your obtained model, first modify
 bash scripts/test.sh
 ```
 After testing 6 tasks in Track1 or 4 tasks in Track2, the results will be merged into the `test.csv` file in `./answer_Track2/`.
-Notice that the given labels in `Testing_Files.json` are not yet true labels, the actual test labels will be used for model evaluation at the later stage of the challenge.
 
 # Acknowledgements
 MPDD is developed based on the work of MEIJU 2025. The Github URL of MEIJU 2025 is: https://github.com/AI-S2-Lab/MEIJU2025-baseline.

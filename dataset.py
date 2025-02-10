@@ -5,10 +5,11 @@ from torch.utils.data import Dataset
 
 
 class AudioVisualDataset(Dataset):
-    def __init__(self, json_data, label_count, personalized_feature_file, max_len=10, batch_size=32, audio_path='', video_path=''):
+    def __init__(self, json_data, label_count, personalized_feature_file, max_len=10, batch_size=32, audio_path='', video_path='', isTest=False):
         self.data = json_data
         self.max_len = max_len  # 目标序列长度
         self.batch_size = batch_size  # 记录批次大小
+        self.isTest = isTest
 
         # Load personalized features
         self.personalized_features = self.load_personalized_features(personalized_feature_file)
@@ -77,12 +78,15 @@ class AudioVisualDataset(Dataset):
         video_feature = self.pad_or_truncate(video_feature, self.max_len)
 
         # Load label
-        if self.label_count == 2:
-            label = torch.tensor(entry['bin_category'], dtype=torch.long)
-        elif self.label_count == 3:
-            label = torch.tensor(entry['tri_category'], dtype=torch.long)
-        elif self.label_count == 5:
-            label = torch.tensor(entry['pen_category'], dtype=torch.long)
+        if self.isTest == False:
+            if self.label_count == 2:
+                label = torch.tensor(entry['bin_category'], dtype=torch.long)
+            elif self.label_count == 3:
+                label = torch.tensor(entry['tri_category'], dtype=torch.long)
+            elif self.label_count == 5:
+                label = torch.tensor(entry['pen_category'], dtype=torch.long)
+        else:
+            label = 0
 
         import os
 

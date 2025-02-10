@@ -3,13 +3,13 @@ set -e
 
 # Default Training Parameters
 DATA_ROOTPATH="D:/HACI/MMchallenge/NEUQdata"
-TRAIN_MODEL="D:/HACI/MMchallenge/MEIJU2025-baseline-master/MPDD/checkpoints/5s_3labels_mfccs+densenet/best_model_2025-02-07-14.19.38.pth"
-AUDIOFEATURE_METHOD="mfccs" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
-VIDEOLFEATURE_METHOD="densenet" # 视频特征类别，可选{openface, resnet, densenet}
-SPLITWINDOW="5s" # 窗口时长，可选{"1s","5s"}
-LABELCOUNT=3 # 标签分类数，可选{2, 3, 5}
+TRAIN_MODEL="D:/HACI/MMchallenge/MEIJU2025-baseline-master/MPDD/checkpoints/1s_2labels_wav2vec+openface/best_model_2025-02-10-18.52.46.pth"
+AUDIOFEATURE_METHOD="wav2vec" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
+VIDEOLFEATURE_METHOD="openface" # 视频特征类别，可选{openface, resnet, densenet}
+SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
+LABELCOUNT=2 # 标签分类数，可选{2, 3, 5}
 TRACK_OPTION="Track2"
-FEATURE_MAX_LEN=5 # 设定最大特征长度，不足补零、超出截断
+FEATURE_MAX_LEN=25 # 设定最大特征长度，不足补零、超出截断
 BATCH_SIZE=16
 DEVICE="cpu"
 

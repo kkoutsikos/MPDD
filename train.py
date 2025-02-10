@@ -157,12 +157,9 @@ if __name__ == '__main__':
                         help="Max length of feature.")
     parser.add_argument('--data_rootpath', type=str, required=True,
                         help="Root path to the program dataset")
-    parser.add_argument('--train_json', type=str, required=False, default="Annotation/Training_Validation_files.json",
+    parser.add_argument('--train_json', type=str, required=False,
                         help="File name of the training JSON file")
-    parser.add_argument('--feature_rootpath', type=str, default='features/',
-                        help="Root path to the dataset features")
     parser.add_argument('--personalized_features_file', type=str,
-                        default='feature_personalized/descriptions_embeddings_with_ids.npy',
                         help="File name of the personalized features file")
     parser.add_argument('--audiofeature_method', type=str, default='mfccs',
                         choices=['mfccs', 'opensmile', 'wav2vec'],
@@ -184,10 +181,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # 涉及相对路径的参数统一修改为绝对路径
-    args.train_json = os.path.join(args.data_rootpath, args.train_json)
-    args.personalized_features_file = os.path.join(args.data_rootpath, args.personalized_features_file)
-    feature_rootpath = os.path.join(args.data_rootpath, args.feature_rootpath)
+    args.train_json = os.path.join(args.data_rootpath, 'Training', 'labels', 'Training_Validation_files.json')
+    args.personalized_features_file = os.path.join(args.data_rootpath, 'Training', 'individualEmbedding', 'descriptions_embeddings_with_ids.npy')
 
     config = load_config('config.json')
     opt = Opt(config)
@@ -198,12 +193,20 @@ if __name__ == '__main__':
     opt.lr = args.lr
 
     # 按照传入的音视频特征种类，拼接出特征文件夹路径
-    audio_path = os.path.join(feature_rootpath, f"{args.audiofeature_method}_{args.splitwindow_time}") + '/'
-    video_path = os.path.join(feature_rootpath, f"{args.videofeature_method}_{args.splitwindow_time}") + '/'
+    audio_path = os.path.join(args.data_rootpath, 'Training', f"{args.splitwindow_time}", 'Audio', f"{args.audiofeature_method}") + '/'
+    video_path = os.path.join(args.data_rootpath, 'Training', f"{args.splitwindow_time}", 'Visual', f"{args.videofeature_method}") + '/'
 
     # 确定 input_dim_a, input_dim_v
-    opt.input_dim_a = np.load(audio_path + "001_001.npy").shape[1]
-    opt.input_dim_v = np.load(video_path + "001_001.npy").shape[1]
+    for filename in os.listdir(audio_path):
+        if filename.endswith('.npy'):
+            opt.input_dim_a = np.load(audio_path + filename).shape[1]
+            break
+
+    for filename in os.listdir(video_path):
+        if filename.endswith('.npy'):
+            opt.input_dim_v = np.load(video_path + filename).shape[1]            
+            break
+    
 
     opt.name = f'{args.splitwindow_time}_{args.labelcount}labels_{args.audiofeature_method}+{args.videofeature_method}'
     logger_path = os.path.join(opt.log_dir, opt.name)
