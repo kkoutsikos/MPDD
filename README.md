@@ -62,6 +62,7 @@ coming soon...
 After obtaining the dataset, users should modify `data_rootpath` in the scripts during training and testing. Notice that testing data will be made public in the later stage of the competition.
 
 `data_rootpath`:
+
     ├── Training/
     │   ├──1s
     │   ├──5s
