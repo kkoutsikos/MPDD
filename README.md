@@ -74,7 +74,6 @@ After obtaining the dataset, users should modify `data_rootpath` in the scripts 
     │   ├──individualEmbedding
     │   ├──labels
 
-The testing data would be 
 
 ## Training
 To train the model with default parameters, taking MPDD-Young for example, simply run:  
