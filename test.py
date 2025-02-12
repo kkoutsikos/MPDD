@@ -117,23 +117,26 @@ if __name__ == '__main__':
     IDs = [path[:path.find('.')] for path in filenames]
 
     if args.labelcount==2:
-        label="binary"
+        label="bin"
     elif args.labelcount==3:
         label="tri"
     elif args.labelcount==5:
         label="pen"
 
     # 将结果输出到CSV中
-    pred_col_name = f"pred_{args.splitwindow_time}_{args.labelcount}"
+    pred_col_name = f"{args.splitwindow_time}_{label}"
 
     result_dir = f"./answer_{args.track_option}"
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
 
-    csv_file = f"{result_dir}/test.csv"
+    csv_file = f"{result_dir}/submission.csv"
 
     # 获取测试数据中的 ID 顺序，确保一致
-    test_ids = [item["audio_feature_path"].replace(".npy", "") for item in test_data]
+    if args.track_option=='Track1':
+        test_ids = [item["audio_feature_path"].split('_')[0] + '_' + item["audio_feature_path"].split('_')[2] for item in test_data]
+    elif args.track_option=='Track2':
+        test_ids = ['_'.join([part.lstrip('0') for part in item["audio_feature_path"].replace(".npy", "").split('_')]) for item in test_data]
 
     if os.path.exists(csv_file):
         df = pd.read_csv(csv_file)
