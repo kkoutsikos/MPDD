@@ -122,6 +122,7 @@ if __name__ == '__main__':
         label="tri"
     elif args.labelcount==5:
         label="pen"
+    
 
     # 将结果输出到CSV中
     pred_col_name = f"{args.splitwindow_time}_{label}"

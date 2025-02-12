@@ -1,2 +1,0 @@
-Time,random seed,splitwindow_time,labelcount,audiofeature_method,videofeature_method,batch_size,num_epochs,feature_max_len,lr,Weighted_F1,Unweighted_F1,Weighted_Acc,Unweighted_Acc,Confusion_Matrix
-2025-02-12 20:58:18,3407,1s,2,wav2vec,openface,16,5,25,0.000060,0.4524,0.4214,0.5083,0.5556,[14 1] [11 1]
