@@ -3,7 +3,7 @@ set -e
 
 # Default Training Parameters
 DATA_ROOTPATH="D:/HACI/MMchallenge/NEUQdata"
-TRAIN_MODEL="D:/HACI/MMchallenge/MEIJU2025-baseline-master/MPDD/checkpoints/1s_2labels_wav2vec+openface/best_model_2025-02-12-20.58.11.pth"
+TRAIN_MODEL="D:/HACI/MMchallenge/MEIJU2025-baseline-master/MPDD/checkpoints/1s_2labels_wav2vec+openface/best_model_2025-02-12-21.23.43.pth"
 AUDIOFEATURE_METHOD="wav2vec" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
 VIDEOLFEATURE_METHOD="openface" # 视频特征类别，可选{openface, resnet, densenet}
 SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
