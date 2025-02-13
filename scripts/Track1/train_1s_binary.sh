@@ -2,7 +2,7 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="D:/HACI/MMchallenge/NEUQdata" # 数据集根目录
+data_rootpath="E:/MDPP_data/MPDD-Elderly" # 数据集根目录
 AUDIOFEATURE_METHOD="mfccs" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
 VIDEOLFEATURE_METHOD="openface" # 视频特征类别，可选{openface, resnet, densenet}
 SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}

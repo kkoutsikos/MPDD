@@ -118,18 +118,18 @@ def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
     id_to_samples = defaultdict(list)
 
     for item in data:
-        label = item["label"]
+        pen_category = item["pen_category"]
         id_ = item["id"]
-        label_to_ids[label].add(id_)
+        label_to_ids[pen_category].add(id_)
         id_to_samples[id_].append(item)
 
     train_ids, val_ids = set(), set()
 
-    for label, ids in label_to_ids.items():
+    for pen_category, ids in label_to_ids.items():
         ids = list(ids)
 
         # 处理 label=4（2:1 划分）
-        if label == 4:
+        if pen_category == 4:
             for id_ in ids:
                 samples = id_to_samples[id_]
                 if len(samples) >= 3:
@@ -141,7 +141,7 @@ def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
             continue
 
         # 处理 label=3，且 id=69 的情况
-        if label == 3:
+        if pen_category == 3:
             for id_ in ids:
                 if id_ == "69":  # ID 87 直接入验证集
                     val_data.extend(id_to_samples[id_])
@@ -166,8 +166,8 @@ def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
     val_category_count = defaultdict(int)
 
     for entry in train_data:
-        train_category_count[entry['label']] += 1
+        train_category_count[entry['pen_category']] += 1
     for entry in val_data:
-        val_category_count[entry['label']] += 1
+        val_category_count[entry['pen_category']] += 1
 
     return train_data, val_data, train_category_count, val_category_count

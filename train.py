@@ -63,8 +63,7 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
     # 划分训练集和验证集
     # data = json.load(open(train_json, 'r'))
     if args.track_option=='Track1':
-        train_data, val_data, train_category_count, val_category_count = train_val_split1(train_json, val_percentage=0.1,
-                                                                                     seed=seed)
+        train_data, val_data, train_category_count, val_category_count = train_val_split1(train_json, val_ratio=0.1, random_seed=seed)
     elif args.track_option=='Track2':
         train_data, val_data, train_category_count, val_category_count = train_val_split2(train_json, val_percentage=0.1,
                                                                                      seed=seed)
