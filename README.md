@@ -1,4 +1,4 @@
-# MM 2025 MPDD Baseline Code
+# MPDD Baseline Code
 The baseline system provided for the MM 2025 MPDD Challenge serves as a starting point for participants to develop their solutions for the Multimodal Personalized Depression Detection tasks. The baseline system is designed to be straightforward yet effective, providing participants with a solid foundation upon which they can build and improve.
 
 # Results
@@ -61,7 +61,7 @@ Given the potential ethical risks and privacy concerns associated with this data
 
 To further safeguard the security and compliance of the data, please complete the following steps before contacting us to request access to the dataset labels and extracted features:  
 
-- **1. Download the MPDD Dataset License Agreement PDF**: The PDF file titled *MPDD Dataset License Agreement* can be found in the main directory of the `MPDD folder`.
+- **1. Download the [MPDD Dataset License Agreement PDF](https://github.com/hacilab/MPDD/blob/main/MPDD%20Dataset%20License%20Agreementt.pdf)**.
 
 - **2. Carefully review the agreement**: The agreement outlines in detail the usage specifications, restrictions, and the responsibilities and obligations of the licensee. Please read the document thoroughly to ensure complete understanding of the terms and conditions.  
 
