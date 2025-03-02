@@ -65,7 +65,7 @@ To further safeguard the security and compliance of the data, please complete th
 
 - **2. Carefully review the agreement**: The agreement outlines in detail the usage specifications, restrictions, and the responsibilities and obligations of the licensee. Please read the document thoroughly to ensure complete understanding of the terms and conditions.  
 
-- **3. Manually sign the agreement**: After confirming your full understanding and agreement with the terms, fill in the required fields and sign the agreement by hand as formal acknowledgment of your acceptance.  
+- **3. Manually sign the agreement**: After confirming your full understanding and agreement with the terms, fill in the required fields and sign the agreement by hand as formal acknowledgment of your acceptance (should be signed with a full-time faculty or researcher).  
 
 Once you have completed the above steps, please submit the required materials to us through the following channels:  
 
