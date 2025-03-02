@@ -112,4 +112,4 @@ bash scripts/test.sh
 After testing 6 tasks in Track1 or 4 tasks in Track2, the results will be merged into the `submission.csv` file in `./answer_Track2/`.
 
 # Acknowledgements
-MPDD is developed based on the work of MEIJU 2025. The Github URL of MEIJU 2025 is: https://github.com/AI-S2-Lab/MEIJU2025-baseline.
+The benchmark of MPDD is developed based on the work of MEIJU 2025. The Github URL of MEIJU 2025 is: https://github.com/AI-S2-Lab/MEIJU2025-baseline.
