@@ -59,6 +59,8 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
     logger.info(f'使用的个性化特征文件：{args.personalized_features_file}')
     num_epochs = args.num_epochs
     device = args.device
+    print(f"device: {device}")
+    model.to(device)
 
     # 划分训练集和验证集
     # data = json.load(open(train_json, 'r'))
@@ -86,7 +88,7 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
     best_emo_cm = []
 
     for epoch in range(num_epochs):
-        model.train()
+        model.train(True)
         total_loss = 0
 
         for i, data in enumerate(train_loader):
