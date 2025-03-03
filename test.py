@@ -62,16 +62,16 @@ if __name__ == '__main__':
     config = load_config('config.json')
     opt = Opt(config)
 
-    # 根据任务类别修改opt中个别动态参数
+    # Modify individual dynamic parameters in opt according to task category
     opt.emo_output_dim = args.labelcount
     opt.feature_max_len = args.feature_max_len
     opt.lr = args.lr
 
-    # 按照传入的音视频特征种类，拼接出特征文件夹路径
+    # Splice out feature folder paths according to incoming audio and video feature types
     audio_path = os.path.join(args.data_rootpath, 'Testing', f"{args.splitwindow_time}", 'Audio', f"{args.audiofeature_method}") + '/'
     video_path = os.path.join(args.data_rootpath, 'Testing', f"{args.splitwindow_time}", 'Visual', f"{args.videofeature_method}") + '/'
 
-    # 确定 input_dim_a, input_dim_v
+    # Obtain input_dim_a, input_dim_v
     for filename in os.listdir(audio_path):
         if filename.endswith('.npy'):
             opt.input_dim_a = np.load(audio_path + filename).shape[1]
@@ -110,7 +110,7 @@ if __name__ == '__main__':
                            isTest=True), batch_size=args.batch_size, shuffle=False)
     logger.info('The number of testing samples = %d' % len(test_loader.dataset))
 
-    # 执行测试
+    # testing
     _, pred, *_ = eval(model, test_loader, args.device)
 
     filenames = [item["audio_feature_path"] for item in test_data if "audio_feature_path" in item]
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         label="pen"
     
 
-    # 将结果输出到CSV中
+    # output results to CSV
     pred_col_name = f"{args.splitwindow_time}_{label}"
 
     result_dir = f"./answer_{args.track_option}"
@@ -133,7 +133,7 @@ if __name__ == '__main__':
 
     csv_file = f"{result_dir}/submission.csv"
 
-    # 获取测试数据中的 ID 顺序，确保一致
+    # Get the order of the IDs in the test data to ensure consistency
     if args.track_option=='Track1':
         test_ids = [item["audio_feature_path"].split('_')[0] + '_' + item["audio_feature_path"].split('_')[2] for item in test_data]
     elif args.track_option=='Track2':

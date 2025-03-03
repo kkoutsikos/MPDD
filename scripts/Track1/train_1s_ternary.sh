@@ -2,17 +2,17 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="E:/MDPP_data/MPDD-Elderly" # 数据集根目录
-AUDIOFEATURE_METHOD="opensmile" # 音频特征类别,可选{wav2vec,opensmile,mfccs}
-VIDEOLFEATURE_METHOD="resnet" # 视频特征类别，可选{openface, resnet, densenet}
-SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
-LABELCOUNT=3 # 标签分类数，可选{2, 3, 5}
+data_rootpath="E:/MDPP_data/MPDD-Elderly" # Dataset root directory
+AUDIOFEATURE_METHOD="opensmile" # Audio feature type, options {wav2vec, opensmile, mfccs}
+VIDEOLFEATURE_METHOD="resnet" # Video feature type, options {openface, resnet, densenet}
+SPLITWINDOW="1s" # Window duration, options {"1s", "5s"}
+LABELCOUNT=3 # Number of label categories, options {2, 3, 5}
 TRACK_OPTION="Track1"
-FEATURE_MAX_LEN=26 # 设定最大特征长度，不足补零、超出截断
+FEATURE_MAX_LEN=26 # Set maximum feature length; pad with zeros if insufficient, truncate if exceeding
 BATCH_SIZE=2
 LR=0.0000046
 NUM_EPOCHS=200
-DEVICE="cpu"
+DEVICE="cpu" # Options {cuda, cpu}
 
 
 for arg in "$@"; do

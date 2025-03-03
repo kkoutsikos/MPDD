@@ -8,21 +8,20 @@ import torch
 
 def train_val_split2(file_path, val_percentage=0.10, seed=None):
     """
-    Track2数据集划分
+    Track2 dataset split
 
-    从给定的JSON文件中按人员编号分组，选取10%的人员编号数据，同时需确保每个标签的比例和原始数据一致，
-    选取的人员编号数据要么全部选中，要么全不选。
+    Group data by person ID from the given JSON file and select 10% of the person IDs, ensuring that the proportion of each label remains consistent with the original data. For each person, either all their data is selected or none is selected.
 
-    参数:
-    - file_path: JSON文件路径
-    - val_percentage: 需要选取的数据比例（基于人员编号数量，默认是10%）
-    - seed: 随机种子
+    Parameters:
+    - file_path: path to the JSON file
+    - val_percentage: proportion of data to select (based on the number of person IDs, default is 10%)
+    - seed: random seed
 
-    返回:
-    - train_data: 训练集
-    - val_data: 验证集
-    - train_category_count: 训练集 tri_category 标签的总数
-    - val_category_count: 验证集 tri_category 标签的总数
+    Returns:
+    - train_data: training set
+    - val_data: validation set
+    - train_category_count: total count of tri_category labels in the training set
+    - val_category_count: total count of tri_category labels in the validation set
     """
 
     if seed is not None:
@@ -33,11 +32,11 @@ def train_val_split2(file_path, val_percentage=0.10, seed=None):
 
     grouped_by_person = defaultdict(list)
     for entry in data:
-        # 提取人员编号（假设格式为 "人员编号_主题编号.npy"）
+        # Extract person ID (assumes format "personID_topicID.npy")
         person_id = entry['audio_feature_path'].split('_')[0]
         grouped_by_person[person_id].append(entry)
 
-    # 按标签类别均匀划分人员（young数据集根据tri_category划分）
+    # Evenly distribute persons based on label category (young dataset is split according to tri_category)
     tri_category_person = defaultdict(list)
     for person_id, entries in grouped_by_person.items():
         tri_category = entries[0]['tri_category']
@@ -48,7 +47,7 @@ def train_val_split2(file_path, val_percentage=0.10, seed=None):
 
     selected_person_ids = set()
 
-    # 计算每个类别的人员数量和需要选取的人员数量
+    # Calculate the number of persons per category and the number to be selected
     selected_per_category = defaultdict(int)
     for category, person_ids in tri_category_person.items():
         num_category_persons = len(person_ids)
@@ -59,17 +58,17 @@ def train_val_split2(file_path, val_percentage=0.10, seed=None):
         num_category_to_select = selected_per_category[category]
         selected_person_ids.update(random.sample(person_ids, num_category_to_select))
 
-    # 构建验证集数据
+    # Build the validation set data
     val_data = []
     for entry in data:
         person_id = entry['audio_feature_path'].split('_')[0]
         if person_id in selected_person_ids:
             val_data.append(entry)
 
-    # 训练集
+    # Training set
     train_data = [entry for entry in data if entry not in val_data]
 
-    # 统计 train_data 和 val_data 中 tri_category 标签的总数
+    # Count the total number of tri_category labels in train_data and val_data
     train_category_count = defaultdict(int)
     val_category_count = defaultdict(int)
 
@@ -78,7 +77,7 @@ def train_val_split2(file_path, val_percentage=0.10, seed=None):
 
     for entry in val_data:
         val_category_count[entry['tri_category']] += 1
-    # 保存 train_data 和 val_data 到 JSON 文件（如果需要）
+    # Save train_data and val_data to JSON file (if needed)
 
 
     return train_data, val_data, train_category_count, val_category_count
@@ -89,24 +88,24 @@ from collections import defaultdict
 
 def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
     """
-    Track1数据集划分
+    Track1 dataset split
 
-    读取 JSON 文件，并按照指定规则划分训练集和验证集：
-      - label=4 的数据按 2:1 划分；
-      - label=3 且 id=69 的数据直接放入验证集；
-      - 其余数据按照 val_ratio 进行划分。
+    Read the JSON file and split it into training and validation sets according to the specified rules:
+      - Data with label=4 are split in a 2:1 ratio;
+      - Data with label=3 and id=69 are placed directly into the validation set;
+      - The remaining data are split according to val_ratio.
     
-    保证：
-      - 同一个 ID 的样本不会同时出现在训练集和验证集中。
-      - 返回格式与 train_val_split 保持一致。
+    Ensure that:
+      - Samples with the same ID do not appear in both the training and validation sets.
+      - The return format is consistent with train_val_split.
 
-    参数:
-        file_path (str): JSON 数据文件路径
-        val_ratio (float): 验证集占比，默认 0.1
-        random_seed (int): 随机种子，默认 3407
+    Parameters:
+        file_path (str): path to the JSON data file
+        val_ratio (float): proportion of the validation set, default is 0.1
+        random_seed (int): random seed, default is 3407
 
-    返回:
-        tuple: (训练数据列表, 验证数据列表, 训练集类别统计, 验证集类别统计)
+    Returns:
+        tuple: (training data list, validation data list, training set category counts, validation set category counts)
     """
     random.seed(random_seed)
 
@@ -128,7 +127,7 @@ def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
     for pen_category, ids in label_to_ids.items():
         ids = list(ids)
 
-        # 处理 label=4（2:1 划分）
+        # Process label=4 (split in a 2:1 ratio)
         if pen_category == 4:
             for id_ in ids:
                 samples = id_to_samples[id_]
@@ -140,28 +139,28 @@ def train_val_split1(file_path, val_ratio=0.1, random_seed=3407):
                     train_data.extend(samples)
             continue
 
-        # 处理 label=3，且 id=69 的情况
+        # Process the case of label=3 and id=69
         if pen_category == 3:
             for id_ in ids:
-                if id_ == "69":  # ID 87 直接入验证集
+                if id_ == "69":  # ID 87 directly placed into the validation set
                     val_data.extend(id_to_samples[id_])
                 else:
                     train_data.extend(id_to_samples[id_])
             continue
 
-        # 其他类别按比例随机划分
+        # Other categories are randomly split according to the proportion
         random.shuffle(ids)
         split_index = int(len(ids) * (1 - val_ratio))
         train_ids.update(ids[:split_index])
         val_ids.update(ids[split_index:])
 
-    # 根据 ID 划分数据
+    # Split data based on ID
     for id_ in train_ids:
         train_data.extend(id_to_samples[id_])
     for id_ in val_ids:
         val_data.extend(id_to_samples[id_])
 
-    # 计算类别统计信息
+    # Calculate category statistics
     train_category_count = defaultdict(int)
     val_category_count = defaultdict(int)
 

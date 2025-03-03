@@ -42,7 +42,7 @@ class ourModel(BaseModel, nn.Module):
         cls_layers = list(map(lambda x: int(x), opt.cls_layers.split(',')))
 
         # cls_input_size = 5*opt.hidden_size, same with max-len
-        cls_input_size = opt.feature_max_len * opt.hidden_size + 1024  # 加入个性化特征的维度
+        cls_input_size = opt.feature_max_len * opt.hidden_size + 1024  # with personalized feature
 
                                             
         self.netEmoC = FcClassifier(cls_input_size, cls_layers, output_dim=opt.emo_output_dim, dropout=opt.dropout_rate)
@@ -113,7 +113,7 @@ class ourModel(BaseModel, nn.Module):
         if 'personalized_feat' in input:
             self.personalized = input['personalized_feat'].float().to(self.device)
         else:
-            self.personalized = None  # 如果没有提供个性化特征
+            self.personalized = None  # if no personalized features given
             
 
     def forward(self, acoustic_feat=None, visual_feat=None):
@@ -126,20 +126,20 @@ class ourModel(BaseModel, nn.Module):
         emo_feat_A = self.netEmoA(self.acoustic)
         emo_feat_V = self.netEmoV(self.visual)
 
-        '''保证时间维度的修改'''
+        '''insure time dimension modification'''
         emo_fusion_feat = torch.cat((emo_feat_V, emo_feat_A), dim=-1) # (batch_size, seq_len, 2 * embd_size)
         
         emo_fusion_feat = self.netEmoFusion(emo_fusion_feat)
         
-        '''动态获取bs'''
+        '''dynamic acquisition of bs'''
         batch_size = emo_fusion_feat.size(0)
 
-        emo_fusion_feat = emo_fusion_feat.permute(1, 0, 2).reshape(batch_size, -1)  # 转换为 [batch_size, feature_dim] 1028
+        emo_fusion_feat = emo_fusion_feat.permute(1, 0, 2).reshape(batch_size, -1)  # turn into [batch_size, feature_dim] 1028
 
         if self.personalized is not None:
             emo_fusion_feat = torch.cat((emo_fusion_feat, self.personalized), dim=-1)  # [batch_size, seq_len * feature_dim + 1024]
 
-        '''back prop用的'''
+        '''for back prop'''
         self.emo_logits_fusion, _ = self.netEmoCF(emo_fusion_feat)
         """-----------"""
 
@@ -192,8 +192,8 @@ class Focal_Loss(torch.nn.Module):
 
     def forward(self, preds, targets):
         """
-        preds:softmax输出结果
-        labels:真实值
+        preds:softmax output
+        labels:true values
         """
         ce_loss = F.cross_entropy(preds, targets, reduction='mean')
         pt = torch.exp(-ce_loss)

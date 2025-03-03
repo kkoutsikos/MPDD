@@ -7,8 +7,8 @@ from torch.utils.data import Dataset
 class AudioVisualDataset(Dataset):
     def __init__(self, json_data, label_count, personalized_feature_file, max_len=10, batch_size=32, audio_path='', video_path='', isTest=False):
         self.data = json_data
-        self.max_len = max_len  # 目标序列长度
-        self.batch_size = batch_size  # 记录批次大小
+        self.max_len = max_len  # Expected sequence length
+        self.batch_size = batch_size 
         self.isTest = isTest
 
         # Load personalized features
@@ -22,13 +22,13 @@ class AudioVisualDataset(Dataset):
 
     def fixed_windows(self, features: torch.Tensor, fixLen=4):
         """
-        将二维特征划分为 fixLen 个固定窗口并聚合成固定大小的结果（Tensor 版）。
+        Divides 2D features into fixLen fixed windows and aggregates them into fixed-size results (Tensor version).
 
-        参数:
-        - features: (timesteps, feature_dim) 的输入特征张量
+        Parameters.
+        - features: the input feature tensor of (timesteps, feature_dim)
 
-        返回:
-        - (4, feature_dim) 的张量，每一行表示一个窗口的聚合特征
+        Returns.
+        - Tensor of (4, feature_dim), each row represents a window of aggregated features
         """
         timesteps, feature_dim = features.shape
         window_size = int(torch.ceil(torch.tensor(timesteps / fixLen)))
@@ -46,7 +46,7 @@ class AudioVisualDataset(Dataset):
         return torch.stack(windows, dim=0)
 
     def pad_or_truncate(self, feature, max_len):
-        """将输入特征序列进行填充或截断"""
+        """Fill or truncate the input feature sequence"""
         if feature.shape[0] < max_len:
             padding = torch.zeros((max_len - feature.shape[0], feature.shape[1]))
             feature = torch.cat((feature, padding), dim=0)
@@ -90,10 +90,9 @@ class AudioVisualDataset(Dataset):
 
         import os
 
-        filepath = entry['audio_feature_path']  # 假设这是包含路径的文件名
-        # 提取文件名
+        filepath = entry['audio_feature_path']  # the filename containing path to features
         filename = os.path.basename(filepath)
-        # 提取人员id并转换为整数
+        # Extract person ids and convert to integers
         person_id = int(filename.split('_')[0])
         personalized_id = str(person_id)
 

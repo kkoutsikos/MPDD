@@ -31,6 +31,12 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
     pytorch >= 1.0.0
     scikit-learn = 1.5.1
 
+Given `requirements.txt`, we recommend users to configure their environment via conda with the following steps:
+
+    conda create -n myenv python=3.9 -y   # specify the name of the new environment as myenv
+    conda activate myenv   # entering virtual environment
+    pip install -r requirements.txt   # installing dependencies
+
 # Features
 
 In our baseline, we use the following features:
@@ -94,18 +100,38 @@ After obtaining the dataset, users should modify `data_rootpath` in the scripts 
 
 ## Training
 To train the model with default parameters, taking MPDD-Young for example, simply run:  
+
+```bash
+cd path/to/MPDD   # replace with actual path
+```
 ```bash
 bash scripts/Track2/train_1s_binary.sh
 ```
 
 You can also modify parameters such as feature types, split window time, classification dimensions, or learning rate directly through the command line:  
 ```bash
-bash scripts/Track2/train_1s_binary.sh --audiofeature_method=wav2vec --videofeature_method=resnet --splitwindow_time=5s --labelcount=5 --batch_size=32 --lr=0.001 --num_epochs=500
+bash scripts/Track2/train_1s_binary.sh --audiofeature_method=wav2vec --videofeature_method=resnet --splitwindow_time=5s --labelcount=3 --batch_size=32 --lr=0.001 --num_epochs=500
 ```
 Refer to `config.json` for more parameters.
 
+The specific dimensions of each feature are shown in the table below:
+| Feature                  | Dimension |
+|--------------------------|-----------|
+| Wav2vec                 | 512       |
+| MFCCs                   | 64        |
+| OpenSmile               | 6373      |
+| ResNet-50               | 1000      |
+| DenseNet-121            | 1000      |
+| OpenFace                | 709       |
+| Personalized Feature    | 1024      |
+
+
 ## Testing
 To predict the labels for the testing set with your obtained model, first modify the default parameters in `test.sh` to match the current task, and run:  
+
+```bash
+cd path/to/MPDD   # replace with actual path
+```
 ```bash
 bash scripts/test.sh
 ```

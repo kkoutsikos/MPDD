@@ -40,8 +40,8 @@ def eval(model, val_loader, device):
     total_emo_label = np.concatenate(total_emo_label)
 
     emo_acc_unweighted = accuracy_score(total_emo_label, total_emo_pred, sample_weight=None)
-    class_counts = np.bincount(total_emo_label)  # 获取每个类别的样本数量
-    sample_weights = 1 / (class_counts[total_emo_label] + 1e-6)  # 计算每个样本的权重，避免除零错误
+    class_counts = np.bincount(total_emo_label)  # Get the sample size for each category
+    sample_weights = 1 / (class_counts[total_emo_label] + 1e-6)  # Calculate weights for each sample to avoid division by zero errors
     emo_acc_weighted = accuracy_score(total_emo_label, total_emo_pred, sample_weight=sample_weights)
 
     emo_f1_weighted = f1_score(total_emo_label, total_emo_pred, average='weighted')
@@ -54,15 +54,15 @@ def eval(model, val_loader, device):
 def train_model(train_json, model, audio_path='', video_path='', max_len=5,
                 best_model_name='best_model.pth', seed=None):
     """
-    这里是训练函数
+    This is the traing function
     """
-    logger.info(f'使用的个性化特征文件：{args.personalized_features_file}')
+    logger.info(f'personalized features used：{args.personalized_features_file}')
     num_epochs = args.num_epochs
     device = args.device
     print(f"device: {device}")
     model.to(device)
 
-    # 划分训练集和验证集
+    # split training and validation set
     # data = json.load(open(train_json, 'r'))
     if args.track_option=='Track1':
         train_data, val_data, train_category_count, val_category_count = train_val_split1(train_json, val_ratio=0.1, random_seed=seed)
@@ -102,7 +102,7 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
 
         avg_loss = total_loss / len(train_loader)
 
-        # 评估指标
+        # evaluation
         label, pred, emo_acc_weighted, emo_acc_unweighted, emo_f1_weighted, emo_f1_unweighted, emo_cm = eval(model, val_loader,
                                                                                                 device)
 
@@ -129,7 +129,7 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
                 f"Best Weighted Acc: {best_emo_acc:.4f}, Best Unweighted Acc: {best_emo_acc_unweighted:.4f}.")
     logger.info('Confusion Matrix:\n{}'.format(best_emo_cm))
 
-    # 将结果输出到CSV中
+    # output results to CSV
     csv_file = f'{opt.log_dir}/{opt.name}.csv'
     formatted_best_emo_cm = ' '.join([f"[{' '.join(map(str, row))}]" for row in best_emo_cm])
     header = f"Time,random seed,splitwindow_time,labelcount,audiofeature_method,videofeature_method," \
@@ -139,7 +139,7 @@ def train_model(train_json, model, audio_path='', video_path='', max_len=5,
                    f"{args.batch_size},{args.num_epochs},{opt.feature_max_len},{opt.lr:.6f}," \
                    f"{best_emo_f1:.4f},{best_emo_f1_unweighted:.4f},{best_emo_acc:.4f},{best_emo_acc_unweighted:.4f},{formatted_best_emo_cm}"
     file_exists = os.path.exists(csv_file)
-    # 打开文件（如果文件存在则以追加模式打开，不存在则创建）
+    # Open file (append if file exists, create if it doesn't)
     with open(csv_file, mode='a') as file:
         if not file_exists:
             file.write(header + '\n')
@@ -188,16 +188,16 @@ if __name__ == '__main__':
     config = load_config('config.json')
     opt = Opt(config)
 
-    # 根据任务类别修改opt中个别动态参数
+    # Modify individual dynamic parameters in opt according to task category
     opt.emo_output_dim = args.labelcount
     opt.feature_max_len = args.feature_max_len
     opt.lr = args.lr
 
-    # 按照传入的音视频特征种类，拼接出特征文件夹路径
+    # Splice out feature folder paths according to incoming audio and video feature types
     audio_path = os.path.join(args.data_rootpath, 'Training', f"{args.splitwindow_time}", 'Audio', f"{args.audiofeature_method}") + '/'
     video_path = os.path.join(args.data_rootpath, 'Training', f"{args.splitwindow_time}", 'Visual', f"{args.videofeature_method}") + '/'
 
-    # 确定 input_dim_a, input_dim_v
+    # Obtain input_dim_a, input_dim_v
     for filename in os.listdir(audio_path):
         if filename.endswith('.npy'):
             opt.input_dim_a = np.load(audio_path + filename).shape[1]
@@ -227,8 +227,8 @@ if __name__ == '__main__':
     logger.info(f"batch_size={args.batch_size}, num_epochs={args.num_epochs}, "
                 f"labels={opt.emo_output_dim}, feature_max_len={opt.feature_max_len}, lr={opt.lr}")
 
-    # 设置随机种子
-    # seed = np.random.randint(0, 10000)  # 随机生成一个种子
+    # set random seed
+    # seed = np.random.randint(0, 10000) 
     seed = 3407
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -236,7 +236,7 @@ if __name__ == '__main__':
 
     logger.info(f"Using random seed: {seed}")
 
-    # 训练模型
+    # training
     train_model(
         train_json=args.train_json,
         model=model,
