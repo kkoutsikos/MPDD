@@ -101,7 +101,7 @@ if __name__ == '__main__':
 
     model = ourModel(opt)
     model.load_state_dict(torch.load(args.train_model))
-
+    model.to(args.device)
     test_data = json.load(open(args.test_json, 'r'))
     test_loader = DataLoader(
         AudioVisualDataset(test_data, args.labelcount, args.personalized_features_file, opt.feature_max_len,
