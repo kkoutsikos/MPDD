@@ -9,7 +9,7 @@ VIDEOLFEATURE_METHOD="densenet" # 视频特征类别，可选{openface, resnet, 
 SPLITWINDOW="1s" # 窗口时长，可选{"1s","5s"}
 LABELCOUNT=5 # 标签分类数，可选{2, 3, 5}
 TRACK_OPTION="Track1"
-FEATURE_MAX_LEN=26 # 设定最大特征长度，不足补零、超出截断
+FEATURE_MAX_LEN=26 # 设定最大特征长度，不足补零、超出截断 可选{26, 5}
 BATCH_SIZE=1
 DEVICE="cpu"
 
