@@ -56,12 +56,12 @@ class ourModel(BaseModel, nn.Module):
         self.temperature = opt.temperature
 
 
-        self.device = 'cpu'
-        self.netEmoA = self.netEmoA.to(self.device)
-        self.netEmoV = self.netEmoV.to(self.device)
-        self.netEmoFusion = self.netEmoFusion.to(self.device)
-        self.netEmoC = self.netEmoC.to(self.device)
-        self.netEmoCF = self.netEmoCF.to(self.device)
+        # self.device = 'cpu'
+        # self.netEmoA = self.netEmoA.to(self.device)
+        # self.netEmoV = self.netEmoV.to(self.device)
+        # self.netEmoFusion = self.netEmoFusion.to(self.device)
+        # self.netEmoC = self.netEmoC.to(self.device)
+        # self.netEmoCF = self.netEmoCF.to(self.device)
 
         self.criterion_ce = torch.nn.CrossEntropyLoss()
 
