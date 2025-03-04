@@ -51,7 +51,7 @@ The link of the pre-trained model is: [wav2vec model](https://github.com/faceboo
 **OpenSmile：** We extract utterance-level acoustic features using opensmile. The embedding size of OpenSMILE features is 6373.  
 
 ### Visual Feature:
-**Resnet-50 and Densenet-121：** We employ OpenCV tool to extract scene pictures from each video, capturing frames at a 10-frame interval. Subsequently, we utilize the Resnet-50 and Densenet-121 model to generate utterance-level features for the extracted scene pictures in the videos. The embedding size of the visual features is 1000.
+**Resnet-50 and Densenet-121：** We employ OpenCV tool to extract scene pictures from each video, capturing frames at a 10-frame interval. Subsequently, we utilize the Resnet-50 and Densenet-121 model to generate utterance-level features for the extracted scene pictures in the videos. The embedding size of the visual features is 1000 for Resnet and 1024 for Densenet.
 The links of the pre-trained models are:  
  [ResNet-50](https://huggingface.co/microsoft/resnet-50)  
  [DenseNet-121](https://huggingface.co/pytorch/vision/v0.10.0/densenet121)  
@@ -122,7 +122,7 @@ The specific dimensions of each feature are shown in the table below:
 | MFCCs                   | 64        |
 | OpenSmile               | 6373      |
 | ResNet-50               | 1000      |
-| DenseNet-121            | 1000      |
+| DenseNet-121            | 1024      |
 | OpenFace                | 709       |
 | Personalized Feature    | 1024      |
 
