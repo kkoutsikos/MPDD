@@ -27,15 +27,16 @@ The metrics reported are accuracy (Acc.) and F1-score, both with and without per
 
 # Environment
 
-    python >= 3.8.0
-    pytorch >= 1.0.0
-    scikit-learn = 1.5.1
+    python >= 3.10.0
+    pytorch 
+    scikit-learn 
+    pandas
 
 Given `requirements.txt`, we recommend users to configure their environment via conda with the following steps:
 
-    conda create -n myenv python=3.9 -y   # specify the name of the new environment as myenv
-    conda activate myenv   # entering virtual environment
-    pip install -r requirements.txt   # installing dependencies
+    conda create -n mpdd python=3.10 -y   
+    conda activate mpdd  
+    pip install -r requirements.txt 
 
 # Features
 
