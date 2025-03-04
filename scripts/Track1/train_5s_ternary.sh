@@ -9,9 +9,9 @@ SPLITWINDOW="5s" # Window duration, options {"1s", "5s"}
 LABELCOUNT=3 # Number of label categories, options {2, 3, 5}
 TRACK_OPTION="Track1"
 FEATURE_MAX_LEN=5 # Set maximum feature length; pad with zeros if insufficient, truncate if exceeding
-BATCH_SIZE=8
-LR=0.000015
-NUM_EPOCHS=200
+BATCH_SIZE=16
+LR=0.000147971824491024
+NUM_EPOCHS=400
 DEVICE="cpu" # Options {cuda, cpu}
 
 
