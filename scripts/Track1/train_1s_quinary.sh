@@ -10,8 +10,8 @@ LABELCOUNT=5 # Number of label categories, options {2, 3, 5}
 TRACK_OPTION="Track1"
 FEATURE_MAX_LEN=26 # Set maximum feature length; pad with zeros if insufficient, truncate if exceeding
 BATCH_SIZE=1
-LR=0.0000017
-NUM_EPOCHS=200
+LR=1.65701813672055e-5
+NUM_EPOCHS=400
 DEVICE="cpu" # Options {cuda, cpu}
 
 
