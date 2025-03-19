@@ -2,28 +2,28 @@
 The baseline system provided for the MM 2025 MPDD Challenge serves as a starting point for participants to develop their solutions for the Multimodal Personalized Depression Detection tasks. The baseline system is designed to be straightforward yet effective, providing participants with a solid foundation upon which they can build and improve.
 
 # Results
-The metrics reported are accuracy (Acc.) and F1-score, both with and without personalized features (PF) for the MPDD-Young and MPDD-Elderly datasets. Each value represents the best-performing feature combination for each experiment, using default hyper-parameters.
+The metrics reported are weighted/unweighted F1-score(W_F1/U_F1) and weighted/unweighted accuracy (W_Acc./U_Acc.) with and without personalized features (PF) for the MPDD-Young and MPDD-Elderly datasets. Each value represents the best-performing feature combination for each experiment, using default hyper-parameters.
 
 #### MPDD-Elderly (Track1)
 
-| Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
-|--------|-----------|---------------|----------------|-------------------|-----------------|
-| 1s     | Binary    | mfcc          | openface       | 83.33 / 70.89     | 84.62 / 79.13   |
-| 1s     | Ternary   | opensmile     | resnet         | 55.13 / 49.14     | 56.41 / 55.64   |
-| 1s     | Quinary   | opensmile     | densenet       | 66.67 / 44.00     | 69.23 / 46.66   |
-| 5s     | Binary    | opensmile     | resnet         | 76.92 / 66.15     | 80.77 / 72.37   |
-| 5s     | Ternary   | wav2vec       | openface       | 50.00 / 47.59     | 57.69 / 59.37   |
-| 5s     | Quinary   | mfcc          | densenet       | 75.64 / 56.83     | 78.21 / 58.40   |
+| Length | Task Type | Audio Feature | Visual Feature | w/ PF (W_F1/U_F1) | w/ PF (W_Acc./U_Acc.) | w/o PF (W_F1/U_F1) | w/o PF (W_Acc./U_Acc.) |
+|--------|-----------|---------------|----------------|-------------------|-----------------------|--------------------|------------------------|
+| 1s     | Binary    | mfcc          | openface       | 85.71 / 79.13     | 85.40 / 84.62         | 82.60 / 70.89      | 69.37 / 83.33          |
+| 1s     | Ternary   | opensmile     | resnet         | 56.48 / 55.64     | 55.49 / 56.41         | 54.35 / 49.14      | 48.93 / 55.13          |
+| 1s     | Quinary   | opensmile     | densenet       | 66.26 / 46.66     | 45.79 / 69.23         | 63.85 / 44.00      | 42.45 / 66.67          |
+| 5s     | Binary    | opensmile     | resnet         | 81.75 / 72.37     | 75.40 / 80.77         | 77.90 / 66.15      | 67.94 / 76.92          |
+| 5s     | Ternary   | wav2vec       | openface       | 58.22 / 59.37     | 59.62 / 57.69         | 50.88 / 47.59      | 46.58 / 50.00          |
+| 5s     | Quinary   | mfcc          | densenet       | 75.62 / 58.40     | 57.71 / 78.21         | 73.49 / 56.83      | 56.98 / 75.64          |
 
 
 #### MPDD-Young (Track2)
 
-| Length | Task Type | Audio Feature | Visual Feature | w/o PF (Acc./F1) | w/ PF (Acc./F1) |
-|--------|-----------|---------------|----------------|------------------|-----------------|
-| 1s     | Binary    | wav2vec       | openface       | 56.06 / 55.23    | 63.64 / 59.96   |
-| 1s     | Ternary   | mfcc          | densenet       | 48.48 / 43.72    | 51.52 / 51.62   |
-| 5s     | Binary    | opensmile     | resnet         | 60.61 / 60.02    | 62.12 / 62.11   |
-| 5s     | Ternary   | mfcc          | densenet       | 42.42 / 39.38    | 50.00 / 41.31   |
+| Length | Task Type | Audio Feature | Visual Feature | w/ PF (W_F1/U_F1) | w/ PF (W_Acc./U_Acc.) | w/o PF (W_F1/U_F1) | w/o PF (W_Acc./U_Acc.) |
+|--------|-----------|---------------|----------------|-------------------|-----------------------|--------------------|------------------------|
+| 1s     | Binary    | wav2vec       | openface       | 59.96 / 59.96     | 63.64 / 63.64         | 55.23 / 55.23      | 56.06 / 56.06          |
+| 1s     | Ternary   | mfcc          | densenet       | 51.86 / 51.62     | 49.66 / 51.52         | 47.95 / 43.72      | 42.63 / 48.48          |
+| 5s     | Binary    | opensmile     | resnet         | 62.11 / 62.11     | 62.12 / 62.12         | 60.02 / 60.02      | 60.61 / 60.61          |
+| 5s     | Ternary   | mfcc          | densenet       | 48.18 / 41.31     | 41.71 / 50.00         | 42.82 / 39.38      | 41.29 / 42.42          |
 
 # Environment
 
