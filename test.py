@@ -1,7 +1,7 @@
 import os
 import torch
 import json
-from models.our.our_model import ourModel
+from models.our.our_model_MPDD_cross import ourModelMPDDCross
 from train import eval
 import argparse
 from utils.logger import get_logger
@@ -61,7 +61,17 @@ if __name__ == '__main__':
 
     config = load_config('config.json')
     opt = Opt(config)
+    opt.device = args.device
+    opt.emo_output_dim = args.labelcount
+    
+    # IMPORTANT: Convert class_weights to a torch.Tensor
+    if hasattr(opt, 'class_weights') and isinstance(opt.class_weights, list):
+        opt.class_weights = torch.tensor(opt.class_weights, dtype=torch.float, device=opt.device)
+    # If you also have auxiliary loss weights
+    if hasattr(opt, 'aux_class_weights') and isinstance(opt.aux_class_weights, list):
+        opt.aux_class_weights = torch.tensor(opt.aux_class_weights, dtype=torch.float, device=opt.device)
 
+    
     # Modify individual dynamic parameters in opt according to task category
     opt.emo_output_dim = args.labelcount
     opt.feature_max_len = args.feature_max_len
@@ -99,7 +109,7 @@ if __name__ == '__main__':
                 f"labels={opt.emo_output_dim}, feature_max_len={opt.feature_max_len}")
 
 
-    model = ourModel(opt)
+    model = ourModelMPDDCross(opt)
     model.load_state_dict(torch.load(args.train_model))
     model.to(args.device)
     test_data = json.load(open(args.test_json, 'r'))
@@ -111,7 +121,15 @@ if __name__ == '__main__':
     logger.info('The number of testing samples = %d' % len(test_loader.dataset))
 
     # testing
-    _, pred, *_ = eval(model, test_loader, args.device)
+    avg_loss, pred_array, true_labels_array, f1_w, f1_u, acc_w, acc_u, cm = eval(model, test_loader, args.device)
+    
+    
+    
+    
+    
+    pred_for_csv = pred_array 
+    # Log the testing metrics
+    
 
     filenames = [item["audio_feature_path"] for item in test_data if "audio_feature_path" in item]
     IDs = [path[:path.find('.')] for path in filenames]
@@ -139,6 +157,15 @@ if __name__ == '__main__':
     elif args.track_option=='Track2':
         test_ids = ['_'.join([part.lstrip('0') for part in item["audio_feature_path"].replace(".npy", "").split('_')]) for item in test_data]
 
+    
+    logger.info(f"DEBUG IN TEST.PY:")
+    logger.info(f"  Type of pred_array: {type(pred_array)}")
+    logger.info(f"  Shape of pred_array: {getattr(pred_array, 'shape', 'N/A')}")
+    logger.info(f"  Content (first 5) of pred_array: {pred_array[:5] if isinstance(pred_array, np.ndarray) and pred_array.ndim > 0 else pred_array}")
+    logger.info(f"  Type of test_ids: {type(test_ids)}")
+    logger.info(f"  Length of test_ids: {len(test_ids)}")
+    
+    
     if os.path.exists(csv_file):
         df = pd.read_csv(csv_file)
     else:
@@ -151,12 +178,13 @@ if __name__ == '__main__':
 
     df.index.name = "ID"
 
-    pred = np.array(pred) 
-    if len(pred) != len(test_ids):
-        logger.error(f"Prediction length {len(pred)} does not match test ID length {len(test_ids)}")
+    pred_for_csv = np.array(pred_array) # Rename to avoid confusion with the old 'pred' variable
+
+    if pred_for_csv.size != len(test_ids): # Use pred_for_csv for length check
+        logger.error(f"Prediction length {len(pred_for_csv)} does not match test ID length {len(test_ids)}")
         raise ValueError("Mismatch between predictions and test IDs")
 
-    new_df = pd.DataFrame({pred_col_name: pred}, index=test_ids)
+    new_df = pd.DataFrame({pred_col_name: pred_for_csv}, index=test_ids) # Use pred_for_csv for DataFrame
     df[pred_col_name] = new_df[pred_col_name]
     df = df.reindex(test_ids)
     df.to_csv(csv_file)
