@@ -2,7 +2,7 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="E:/MDPP_data/MPDD-Elderly" # Dataset root directory
+data_rootpath="/mnt/c/MPDD_data/MPDD-Elderly" # Dataset root directory
 AUDIOFEATURE_METHOD="wav2vec" # Audio feature type, options {wav2vec, opensmile, mfccs}
 VIDEOLFEATURE_METHOD="openface" # Video feature type, options {openface, resnet, densenet}
 SPLITWINDOW="5s" # Window duration, options {"1s", "5s"}
@@ -10,7 +10,7 @@ LABELCOUNT=3 # Number of label categories, options {2, 3, 5}
 TRACK_OPTION="Track1"
 FEATURE_MAX_LEN=5 # Set maximum feature length; pad with zeros if insufficient, truncate if exceeding
 BATCH_SIZE=16
-LR=0.000147971824491024
+LR=0.001
 NUM_EPOCHS=400
 DEVICE="cpu" # Options {cuda, cpu}
 
