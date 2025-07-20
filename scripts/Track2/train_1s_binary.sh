@@ -2,7 +2,7 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="D:/HACI/MMchallenge/NEUQdata" # Dataset root directory
+data_rootpath="/mnt/c/MPDD_data/MPDD-Young" # Dataset root directory
 AUDIOFEATURE_METHOD="wav2vec" # Audio feature type, options {wav2vec, opensmile, mfccs}
 VIDEOLFEATURE_METHOD="openface" # Video feature type, options {openface, resnet, densenet}
 SPLITWINDOW="1s" # Window duration, options {"1s", "5s"}

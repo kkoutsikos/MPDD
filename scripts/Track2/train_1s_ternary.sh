@@ -2,15 +2,15 @@
 set -e
 
 # Default Training Parameters
-data_rootpath="D:/HACI/MMchallenge/NEUQdata" # Dataset root directory
-AUDIOFEATURE_METHOD="mfccs" # Audio feature type, options {wav2vec, opensmile, mfccs}
+data_rootpath="/mnt/c/MPDD_data/MPDD-Young" # Dataset root directory
+AUDIOFEATURE_METHOD="opensmile" # Audio feature type, options {wav2vec, opensmile, mfccs}
 VIDEOLFEATURE_METHOD="densenet" # Video feature type, options {openface, resnet, densenet}
 SPLITWINDOW="1s" # Window duration, options {"1s", "5s"}
 LABELCOUNT=3 # Number of label categories, options {2, 3, 5}
 TRACK_OPTION="Track2"
 FEATURE_MAX_LEN=25 # Set maximum feature length; pad with zeros if insufficient, truncate if exceeding
 BATCH_SIZE=8
-LR=0.00026
+LR=0.00005
 NUM_EPOCHS=500
 DEVICE="cpu" # Options {cuda, cpu}
 
